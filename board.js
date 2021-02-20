@@ -94,6 +94,7 @@ function init(container_) {
   tex.wrapT = RepeatWrapping;
   const mat = new MeshPhongMaterial({
     map: tex,
+    shininess: 0.25,
   });
   mat.normalMap = new TextureLoader().load("./img/wood-normal.jpg");
   borus = new Mesh(geo, mat);
@@ -183,6 +184,11 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
   }
   ctx.stroke();
   if (borus) borus.material.map.needsUpdate = true;
+
+  setTimeout(() => {
+    canvas.width = 10;
+    canvas.height = canvas.width;
+  }, 100);
 
   // ctx.arc(canvas.offsetWidth / 2, canvas.offsetHeight / 2, canvas.offsetHeight / 2 - 20, 0, 2 * Math.PI);
 }
