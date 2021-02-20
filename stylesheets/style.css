@@ -1,9 +1,17 @@
 #three-view {
     width: 100vw;
     height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
 #toggle-texture {
-    width: 1000px;
-    height: 1000px;
+    width: 600px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1000;
 }
