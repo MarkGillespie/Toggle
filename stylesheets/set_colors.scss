@@ -1,0 +1,41 @@
+@mixin set_colors($map, $parent:"body") {
+    $background-color : map-get($map, 'background-color');
+    $font-color : map-get($map, 'font-color');
+    $tile-font-color: map-get($map, 'tile-font-color');
+    $tile-color: map-get($map, 'tile-color');
+    $tile-border: map-get($map, 'tile-border');
+    $panel-color: map-get($map, 'panel-color');
+    $shadow-color: map-get($map, 'shadow-color');
+    $shadow-radius: map-get($map, 'shadow-radius');
+    $good-word: map-get($map, 'good-word');
+    $bad-word: map-get($map, 'bad-word');
+
+    #{$parent} {
+        background-color: $background-color;
+        color:$font-color;
+
+        & .title span {
+            color: $tile-font-color;
+            background-color: $tile-color;
+            border: solid 0.075em $tile-border;
+        }
+
+        & #guess-word {
+            color: $font-color;
+            background-color: $panel-color;
+            box-shadow: 0pt 0pt $shadow-radius 0pt $shadow-color;
+        }
+
+        & #found-words {
+            background-color: $panel-color;
+            box-shadow: 0pt 0pt $shadow-radius 0pt $shadow-color;
+        }
+
+        & #found-words span.good {
+            color: $good-word;
+        }
+        & #found-words span.bad {
+            color: $bad-word;
+        }
+    }
+}

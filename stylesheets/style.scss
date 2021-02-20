@@ -1,0 +1,113 @@
+@use 'set_colors.scss' as sc;
+
+@mixin light_mode($parent:"body") {
+@include sc.set_colors((
+    background-color: #fff,
+    font-color: #000,
+    tile-color: #eeb9,
+    tile-font-color: #000,
+    tile-border:#ba89,
+    panel-color: #fffa,
+    shadow-color:#0005,
+    shadow-radius: 5pt,
+    good-word:green,
+    bad-word:red,
+));
+}
+
+@mixin dark_mode($parent:"body") {
+    @include sc.set_colors((
+    background-color: #321,
+    font-color: #eee,
+    tile-color: #6668,
+    tile-font-color: #fdc,
+    tile-border:#6468,
+    panel-color: #7775,
+    shadow-color:#fffb,
+    shadow-radius: 10pt,
+    good-word:green,
+    bad-word:red,
+));
+}
+
+
+@media (prefers-color-scheme: dark) {
+    @include dark_mode();
+}
+
+@media (prefers-color-scheme: light) {
+    @include light_mode();
+}
+
+@include light_mode("body.lightmode");
+@include dark_mode("body.darkmode");
+
+body {
+    padding:0;
+    margin:0;
+    width: 100vw;
+    height: 100vh;
+    font-family: Carrois Gothic;
+}
+
+.title {
+    position: relative; /* required for z-index */
+    z-index: 5;
+    font-size: 55pt;
+    margin: 0;
+    margin-top: 0.125em;
+
+    /* force parent to contain entire div. This ensures
+     * that body doesn't need scrollbars, so you don't
+     * get weird scrolling when you want to rotate the
+     * torus */
+    display: inline-block;
+}
+
+.title span {
+    display: inline-block;
+    padding: 0 0.25em;
+    margin-left: 0.125em;
+    border-radius: 0.125em;
+}
+
+#three-view {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+#guess-word {
+    padding: 6pt;
+    font-size: 28pt;
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    margin-left:-25%;
+    bottom: 25pt;
+    z-index: 2;
+    border-radius: 6pt;
+    border: none;
+}
+
+#found-words {
+    min-width: 5em;
+    height: 50%;
+    overflow-y: scroll;
+    overflow-x: auto;
+    position: absolute;
+    right: 25pt;
+    bottom: 25pt;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+#found-words span {
+    margin: 0 0.25em;
+    font-size: 18pt;
+}

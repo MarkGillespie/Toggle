@@ -43,15 +43,15 @@ function init(container_) {
   // renderer
   renderer = new WebGLRenderer({
     antialias: true,
+    alpha: true,
   });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0xffffff, 1.0);
+  renderer.setClearColor(0xffffff, 0.0);
   renderer.setSize(container.offsetWidth, container.offsetHeight);
   container.appendChild(renderer.domElement);
 
   // scene
   scene = new Scene();
-  scene.background = new Color(0xffffff);
 
   // camera
   const fov = 45.0;
@@ -205,10 +205,10 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
   ctx.stroke();
   if (borus) borus.material.map.needsUpdate = true;
 
-  setTimeout(() => {
-    canvas.width = 10;
-    canvas.height = canvas.width;
-  }, 100);
+  // setTimeout(() => {
+  //   canvas.width = 10;
+  //   canvas.height = canvas.width;
+  // }, 100);
 
   // ctx.arc(canvas.offsetWidth / 2, canvas.offsetHeight / 2, canvas.offsetHeight / 2 - 20, 0, 2 * Math.PI);
 }
