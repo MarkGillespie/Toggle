@@ -7,7 +7,7 @@
             $json = json_decode($file_contents, true);
             if ($json['letters'] == $_POST['board']) {
                 ftruncate($fp, 0);
-                $new_board_data = shell_exec('python3 generate_board_data.py > board.json');
+                $new_board_data = shell_exec('python3 generate_board_data.py 12 > board.json');
                 rewind($fp);
                 fwrite($fp, $new_board_data);
             } else {
@@ -17,7 +17,7 @@
             fclose($fp);
             echo $new_board_data;
         } else {
-            echo shell_exec('python3 generate_board_data.py > board.json');
+            echo shell_exec('python3 generate_board_data.py 12 > board.json');
         }
     } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo shell_exec('cat board.json');

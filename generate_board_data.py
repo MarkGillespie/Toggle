@@ -1,6 +1,7 @@
 import random
 import dawg
 import json
+import sys
 
 lexicon = 'collins_completion.dawg'
 
@@ -55,12 +56,12 @@ def bfs(path, nodes, d, prefix=''):
 
 
 if __name__ == '__main__':
-  n = 3
-  m = 3
+  n = int(sys.argv[1])
+  m = n
   board = get_letters(n, m)
   words = find_words(board, n, m)
   # print(json.dumps({board:board, words:list(words)}))
-  print(json.dumps({'board':board, 'words':list(words)}))
+  print(json.dumps({'board':board, 'words':list(words), 'key':{'raw':board[0:min(n,4)], 'mnemonic':'TODO'}}))
 
 # code to generate collins_completion.dawg
 # with open('collins.txt') as f:

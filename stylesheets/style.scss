@@ -118,6 +118,10 @@ body {
     font-size: 18pt;
 }
 
+button {
+    z-index: 10;
+}
+
 @mixin style_button($parent:"body"){
 #{$parent} #style-menu {
     display: inline-block;
