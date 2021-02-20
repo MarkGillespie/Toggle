@@ -120,8 +120,8 @@ function animate() {
   const scrolling_horizontal = right_pressed - left_pressed;
   const scrolling_vertical = up_pressed - down_pressed;
   for (let i = 0; i < num_points; i++) {
-    uv[2 * i] += scrolling_horizontal * 0.005;
-    uv[2 * i + 1] += scrolling_vertical * 0.005;
+    uv[2 * i] -= scrolling_horizontal * 0.005;
+    uv[2 * i + 1] -= scrolling_vertical * 0.005;
   }
   borus.geometry.attributes.uv.needsUpdate =
     scrolling_horizontal != 0 || scrolling_vertical != 0;
