@@ -51,10 +51,22 @@ body {
     padding: 6pt;
     font-size: 28pt;
     position: absolute;
-    right: 25pt;
+    left: 25pt;
     bottom: 25pt;
     z-index: 2;
     box-shadow: 0pt 0pt 5pt 0pt #0005;
     border-radius: 6pt;
     border: none;
+}
+
+#found-words {
+    width: 25%;
+    height: 50%;
+    overflow: scroll;
+    position: absolute;
+    right: 25pt;
+    bottom: 25pt;
+    z-index: 1;
+    background-color: #fff7;
+    box-shadow: 0pt 0pt 5pt 0pt #0005;
 }
