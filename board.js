@@ -27,6 +27,12 @@ let left_pressed = 0;
 let right_pressed = 0;
 let up_pressed = 0;
 let down_pressed = 0;
+
+// Initialize the canvas to be tiny. We'll resize it later once our image loads
+// But this makes the creation of our initial CanvasTexture much faster
+const canvas = document.createElement("canvas");
+canvas.width = 10;
+canvas.height = canvas.width;
 const background_image = new Image();
 background_image.src = "./img/wood-color.jpg";
 background_image.loaded = false;
@@ -83,7 +89,7 @@ function init(container_) {
   const geo = new TorusGeometry(10, 7, 100, 100);
 
   // Texture
-  const tex = new CanvasTexture(document.getElementById("toggle-texture"));
+  const tex = new CanvasTexture(canvas);
   tex.wrapS = RepeatWrapping;
   tex.wrapT = RepeatWrapping;
   const mat = new MeshPhongMaterial({
@@ -124,48 +130,48 @@ function animate() {
 
 // Only works if background image has been loaded
 function unsafeDrawBoard(num_columns, num_rows, board_letters) {
-  const canvas = document.getElementById("toggle-texture");
+  // Make canvas really big to get crisp fonts
+  canvas.width = 5000;
+  canvas.height = canvas.width;
+
   const ctx = canvas.getContext("2d");
-  ctx.canvas.width = canvas.offsetWidth;
-  ctx.canvas.height = canvas.offsetHeight;
   ctx.fillStyle = "#eef";
 
+  const bigFont = Math.floor(canvas.width / (num_rows + 3));
+  const smallFont = Math.floor(bigFont * 0.6);
+  const lineWeight = Math.floor(0.003 * canvas.width);
+
   // ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  ctx.drawImage(
-    background_image,
-    0,
-    0,
-    canvas.offsetWidth,
-    canvas.offsetHeight
-  );
+  ctx.drawImage(background_image, 0, 0, canvas.width, canvas.height);
 
   ctx.beginPath();
-  ctx.lineWidth = 3;
+  ctx.lineWidth = lineWeight;
 
-  const col_w = canvas.offsetWidth / num_columns;
-  const row_h = canvas.offsetHeight / num_rows;
+  const col_w = canvas.width / num_columns;
+  const row_h = canvas.height / num_rows;
   for (let i = 0; i < num_columns + 1; i++) {
     ctx.moveTo(i * col_w, 0);
-    ctx.lineTo(i * col_w, canvas.offsetHeight);
+    ctx.lineTo(i * col_w, canvas.height);
   }
   for (let i = 0; i < num_rows + 1; i++) {
     ctx.moveTo(0, i * row_h);
-    ctx.lineTo(canvas.offsetWidth, i * row_h);
+    ctx.lineTo(canvas.width, i * row_h);
   }
   ctx.stroke();
 
-  ctx.lineWidth = 3;
+  ctx.lineWidth = lineWeight;
   ctx.fillStyle = "#000";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   let counter = 0;
+
   for (let i = 0; i < num_rows; i++) {
     for (let j = 0; j < num_columns; j++) {
       let letter = board_letters[counter].toUpperCase();
-      ctx.font = "50px Carrois Gothic";
+      ctx.font = bigFont + "px Carrois Gothic";
       if ("Q" == letter) {
         letter = "Qu";
-        ctx.font = "35px Carrois Gothic";
+        ctx.font = smallFont * "px Carrois Gothic";
       }
       ctx.fillText(letter, (j + 0.5) * col_w, (i + 0.5) * row_h);
       if ("MWNZ".includes(letter)) {
@@ -184,7 +190,6 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
 // if background image has been loaded, just call unsafeDrawBoard
 // Otherwise, wait until the image has been loaded and then make call
 function drawBoard(num_columns, num_rows, board_letters) {
-  console.log("drawing", background_image);
   if (background_image.loaded) {
     unsafeDrawBoard(num_columns, num_rows, board_letters);
   } else {

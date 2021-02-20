@@ -38,15 +38,6 @@ body {
     z-index: 0;
 }
 
-#toggle-texture {
-    width: 600px;
-    height: 600px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1000;
-}
-
 #guess-word {
     padding: 6pt;
     font-size: 28pt;
