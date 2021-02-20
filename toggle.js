@@ -10,6 +10,7 @@ import {
   MeshPhongMaterial,
   Mesh,
   RepeatWrapping,
+  TextureLoader,
 } from "https://unpkg.com/three@0.125.1/build/three.module.js";
 import { WEBGL } from "https://unpkg.com/three@0.125.1/examples/jsm/WebGL.js";
 import { TrackballControls } from "https://unpkg.com/three@0.125.1/examples/jsm/controls/TrackballControls.js";
@@ -27,7 +28,7 @@ let right_pressed = 0;
 let up_pressed = 0;
 let down_pressed = 0;
 const background_image = new Image();
-background_image.src = "./Wood048_1K_Color.jpg";
+background_image.src = "./img/wood-color.jpg";
 
 function init(container_) {
   container = container_;
@@ -78,7 +79,7 @@ function init(container_) {
   });
 
   // Torus mesh
-  const geo = new TorusGeometry(10, 7, 16, 100);
+  const geo = new TorusGeometry(10, 7, 100, 100);
 
   // Texture
   const tex = new CanvasTexture(document.getElementById("toggle-texture"));
@@ -87,8 +88,9 @@ function init(container_) {
   const mat = new MeshPhongMaterial({
     map: tex,
   });
+  mat.normalMap = new TextureLoader().load("/img/wood-normal.jpg");
   borus = new Mesh(geo, mat);
-  console.log(borus.geometry)
+  console.log(borus.geometry);
   scene.add(borus);
 }
 
@@ -110,11 +112,12 @@ function animate() {
   const num_points = uv.length / 2;
   const scrolling_horizontal = right_pressed - left_pressed;
   const scrolling_vertical = up_pressed - down_pressed;
-  for (let i = 0; i < num_points; i ++) {
+  for (let i = 0; i < num_points; i++) {
     uv[2 * i] += scrolling_horizontal * 0.005;
     uv[2 * i + 1] += scrolling_vertical * 0.005;
   }
-  borus.geometry.attributes.uv.needsUpdate = (scrolling_horizontal != 0 || scrolling_vertical != 0)
+  borus.geometry.attributes.uv.needsUpdate =
+    scrolling_horizontal != 0 || scrolling_vertical != 0;
 
   render();
 }
@@ -125,9 +128,15 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
   ctx.canvas.width = canvas.offsetWidth;
   ctx.canvas.height = canvas.offsetHeight;
   ctx.fillStyle = "#eef";
-  
+
   // ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  ctx.drawImage(background_image, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
+  ctx.drawImage(
+    background_image,
+    0,
+    0,
+    canvas.offsetWidth,
+    canvas.offsetHeight
+  );
 
   ctx.beginPath();
   ctx.lineWidth = 3;
@@ -149,7 +158,7 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   let counter = 0;
-  for (let i = 0; i < num_rows; i ++) {
+  for (let i = 0; i < num_rows; i++) {
     for (let j = 0; j < num_columns; j++) {
       let letter = board_letters[counter].toUpperCase();
       ctx.font = "50px Carrois Gothic";
@@ -162,7 +171,7 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
         ctx.moveTo((j + 0.25) * col_w, (i + 0.8) * row_h);
         ctx.lineTo((j + 0.75) * col_w, (i + 0.8) * row_h);
       }
-      counter ++;
+      counter++;
     }
   }
   ctx.stroke();
@@ -170,20 +179,25 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
   // ctx.arc(canvas.offsetWidth / 2, canvas.offsetHeight / 2, canvas.offsetHeight / 2 - 20, 0, 2 * Math.PI);
 }
 
-
-let board_letters = '';
+let board_letters = "";
 while (board_letters.length < 100) {
-  board_letters += Math.random().toString(36).replace(/[^a-z]+/g, '');
+  board_letters += Math.random()
+    .toString(36)
+    .replace(/[^a-z]+/g, "");
 }
 
-background_image.addEventListener('load', function() {
-  drawOnCanvas(10,10, board_letters);
-  // console.log(document.getElementById("three-view"));
-  init(document.getElementById("three-view"));
-  animate();
-}, false);
+background_image.addEventListener(
+  "load",
+  function () {
+    drawOnCanvas(10, 10, board_letters);
+    // console.log(document.getElementById("three-view"));
+    init(document.getElementById("three-view"));
+    animate();
+  },
+  false
+);
 
-window.addEventListener('keydown', e => {
+window.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowLeft":
       left_pressed = 1;
@@ -200,7 +214,7 @@ window.addEventListener('keydown', e => {
   }
 });
 
-window.addEventListener('keyup', e => {
+window.addEventListener("keyup", (e) => {
   switch (e.key) {
     case "ArrowLeft":
       left_pressed = 0;
