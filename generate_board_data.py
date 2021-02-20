@@ -1,5 +1,6 @@
 import random
 import dawg
+import json
 
 lexicon = 'collins_completion.dawg'
 
@@ -10,7 +11,7 @@ class Node:
 
 def get_letters(n,m):
   board = ''
-  scrabble_distribution = ['A'] * 9 + ['B'] * 2 + ['C'] * 2 + ['D'] * 4 + ['E'] * 12 +['F'] * 2 + ['G'] * 3 + ['H'] * 2 + ['I'] * 9 + ['J'] * 1 + ['K'] * 1 + ['L'] * 4 + ['M'] * 2 + ['N'] * 6 + ['O'] * 8 + ['P'] * 2 + ['Q'] * 1 + ['R'] * 6 + ['S'] * 4 + ['T'] * 6 + ['U'] * 4 + ['V'] * 2 + ['W'] * 2 + ['X'] * 1 + ['Y'] * 2 + ['Z'] * 1 
+  scrabble_distribution = ['A'] * 9 + ['B'] * 2 + ['C'] * 2 + ['D'] * 4 + ['E'] * 12 +['F'] * 2 + ['G'] * 3 + ['H'] * 2 + ['I'] * 9 + ['J'] * 1 + ['K'] * 1 + ['L'] * 4 + ['M'] * 2 + ['N'] * 6 + ['O'] * 8 + ['P'] * 2 + ['Q'] * 1 + ['R'] * 6 + ['S'] * 4 + ['T'] * 6 + ['U'] * 4 + ['V'] * 2 + ['W'] * 2 + ['X'] * 1 + ['Y'] * 2 + ['Z'] * 1
 
   for _ in range(n * m):
     board += random.choice(scrabble_distribution)
@@ -46,7 +47,6 @@ def bfs(path, nodes, d, prefix=''):
   new_prefix = prefix + path[-1].letter
   if d.has_keys_with_prefix(new_prefix):
     if new_prefix in d:
-      print(new_prefix)
       found_words.add(new_prefix)
     for (i, j) in path[-1].neighbors:
       if nodes[i][j] not in path:
@@ -55,11 +55,16 @@ def bfs(path, nodes, d, prefix=''):
 
 
 if __name__ == '__main__':
+  d = dawg.IntCompletionDAWG()
+  d.load('NWL20.dawg')
+  print(d)
+
   n = 3
   m = 3
   board = get_letters(n, m)
-  print(board)
-  print(find_words(board, n ,m))
+  words = find_words(board, n, m)
+  # print(json.dumps({board:board, words:list(words)}))
+  print(json.dumps({'board':board, 'words':list(words)}))
 
 # code to generate collins_completion.dawg
 # with open('collins.txt') as f:
