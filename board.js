@@ -96,7 +96,6 @@ function init(container_) {
     map: tex,
     shininess: 0.25,
   });
-  mat.normalMap = new TextureLoader().load("./img/wood-normal.jpg");
   borus = new Mesh(geo, mat);
   scene.add(borus);
 }
@@ -143,7 +142,28 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
   const lineWeight = Math.floor(0.003 * canvas.width);
 
   // ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  ctx.drawImage(background_image, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(background_image, 0, 0, canvas.width / 2, canvas.height / 2);
+  ctx.drawImage(
+    background_image,
+    canvas.width / 2,
+    0,
+    canvas.width / 2,
+    canvas.height / 2
+  );
+  ctx.drawImage(
+    background_image,
+    0,
+    canvas.height / 2,
+    canvas.width / 2,
+    canvas.height / 2
+  );
+  ctx.drawImage(
+    background_image,
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width / 2,
+    canvas.height / 2
+  );
 
   ctx.beginPath();
   ctx.lineWidth = lineWeight;
