@@ -55,10 +55,6 @@ def bfs(path, nodes, d, prefix=''):
 
 
 if __name__ == '__main__':
-  d = dawg.IntCompletionDAWG()
-  d.load('NWL20.dawg')
-  print(d)
-
   n = 3
   m = 3
   board = get_letters(n, m)
