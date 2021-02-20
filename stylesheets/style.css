@@ -1,3 +1,9 @@
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 #three-view {
     width: 100vw;
     height: 100vh;
@@ -8,10 +14,64 @@
 }
 
 #toggle-texture {
-    width: 600px;
-    height: 600px;
+    width: 1000px;
+    height: 1000px;
     position: absolute;
     top: 0;
     left: 0;
     z-index: -1000;
+}
+
+#word-input {
+    position: absolute;
+    bottom: 10px;
+    z-index: 1;
+    left: 50%;
+    right: 50%;
+    width: 200px;
+    margin-left: -100px;
+    font-size: 22pt;
+    text-transform: uppercase;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background: #ffb703;
+}
+
+#words-found {
+    position: absolute;
+    right: 10px;
+    z-index: 1;
+    width: 150px;
+    font-size: 14px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    border-radius: 5px;
+}
+
+#board-id {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-top: 5px;
+    background: #fb8500;
+}
+
+
+#word-list {
+    height: 200px;
+    overflow-y: scroll;
+    padding-left: 5px;
+    padding-top: 5px;
+    border: 1px solid black;
+    border-top: none;
+    border-bottom: none;
+    background: #ffb703;
+}
+
+#progress {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid black;
+    padding-left: 5px;
+    background: #fb8500;
 }

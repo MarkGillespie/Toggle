@@ -43,7 +43,7 @@ function init(container_) {
 
   // scene
   scene = new Scene();
-  scene.background = new Color(0xffffff);
+  scene.background = new Color(0x023047);
 
   // camera
   const fov = 45.0;
@@ -86,9 +86,10 @@ function init(container_) {
   tex.wrapT = RepeatWrapping;
   const mat = new MeshPhongMaterial({
     map: tex,
+    shininess: 0
   });
   borus = new Mesh(geo, mat);
-  console.log(borus.geometry)
+  // console.log(borus.geometry)
   scene.add(borus);
 }
 
@@ -108,8 +109,8 @@ function animate() {
 
   const uv = borus.geometry.attributes.uv.array;
   const num_points = uv.length / 2;
-  const scrolling_horizontal = right_pressed - left_pressed;
-  const scrolling_vertical = up_pressed - down_pressed;
+  const scrolling_horizontal = left_pressed - right_pressed;
+  const scrolling_vertical = down_pressed - up_pressed;
   for (let i = 0; i < num_points; i ++) {
     uv[2 * i] += scrolling_horizontal * 0.005;
     uv[2 * i + 1] += scrolling_vertical * 0.005;
@@ -124,11 +125,12 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
   const ctx = canvas.getContext("2d");
   ctx.canvas.width = canvas.offsetWidth;
   ctx.canvas.height = canvas.offsetHeight;
-  ctx.fillStyle = "#eef";
   
-  // ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  ctx.drawImage(background_image, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
+  ctx.fillStyle = "#8ecae6";
+  ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+  // ctx.drawImage(background_image, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
+  ctx.strokeStyle = "#219ebc";
   ctx.beginPath();
   ctx.lineWidth = 3;
 
@@ -145,17 +147,19 @@ function drawOnCanvas(num_columns, num_rows, board_letters) {
   ctx.stroke();
 
   ctx.lineWidth = 3;
+  ctx.beginPath();
   ctx.fillStyle = "#000";
+  ctx.strokeStyle = "#000";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   let counter = 0;
   for (let i = 0; i < num_rows; i ++) {
     for (let j = 0; j < num_columns; j++) {
       let letter = board_letters[counter].toUpperCase();
-      ctx.font = "50px Carrois Gothic";
+      ctx.font = "60px Helvetica";
       if ("Q" == letter) {
         letter = "Qu";
-        ctx.font = "35px Carrois Gothic";
+        ctx.font = "50px Helvetica";
       }
       ctx.fillText(letter, (j + 0.5) * col_w, (i + 0.5) * row_h);
       if ("MWNZ".includes(letter)) {
