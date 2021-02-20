@@ -59,7 +59,7 @@ function init(container_) {
   const ambient = new AmbientLight(0xffffff, 0.35);
   camera.add(ambient);
   const point = new PointLight(0xffffff);
-  point.position.set(2, 20, 50);
+  point.position.set(2, 20, 5);
   camera.add(point);
 
   scene.add(camera);
@@ -88,7 +88,7 @@ function init(container_) {
   const mat = new MeshPhongMaterial({
     map: tex,
   });
-  mat.normalMap = new TextureLoader().load("/img/wood-normal.jpg");
+  mat.normalMap = new TextureLoader().load("./img/wood-normal.jpg");
   borus = new Mesh(geo, mat);
   console.log(borus.geometry);
   scene.add(borus);
