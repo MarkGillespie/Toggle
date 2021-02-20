@@ -6,8 +6,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='//fonts.googleapis.com/css?family=Carrois%20Gothic:400' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="screen">
+        <script type="text/javascript">
+         /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+         function doDropdown() {
+             document.getElementById("style-menu").classList.toggle("show");
+             document.getElementById("style-menu").classList.toggle("selected");
+         }
+
+         function setStyle(style) {
+             console.log(style);
+             document.body.classList.remove("lightmode");
+             document.body.classList.remove("darkmode");
+             document.body.classList.add(style);
+         }
+
+         // Close the dropdown if the user clicks outside of it
+         window.onclick = function (event) {
+             console.log(event.target);
+             if (
+                 !event.target.matches(".dropbtn") &&
+                 !event.target.matches("#style-menu button")
+             ) {
+                 document.getElementById("style-menu").classList.remove("show");
+                 document.getElementById("style-menu").classList.remove("selected");
+             }
+         };
+        </script>
     </head>
     <body>
+        <div id="style-menu" class="jsonly">
+            <button class="dropbtn navbar_item" onclick="doDropdown()">Style</button>
+            <ul>
+                <li><button onclick="setStyle('lightmode');">Light Mode</button></li>
+                <li><button onclick="setStyle('darkmode');">Dark Mode</button></li>
+            </ul>
+        </div>
+
         <div id="three-view" ></div>
         <div class="title">
             <span>T</span><span>O</span><span>G</span><span>G</span><span>L</span><span>E</span>

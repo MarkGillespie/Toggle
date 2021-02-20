@@ -37,5 +37,21 @@
         & #found-words span.bad {
             color: $bad-word;
         }
+
+        & #style-menu button {
+            color: $tile-font-color;
+            background-color: $tile-color;
+            box-shadow: 0pt 0pt 0.15em 0pt $shadow-color;
+        }
+
+        & #style-menu ul {
+            & button {
+                border: none;
+                font-size: 1.25em;
+                color: $tile-font-color;
+                background-color: $tile-color;
+                border-radius: 0.75em;
+            }
+        }
     }
 }

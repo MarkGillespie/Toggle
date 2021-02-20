@@ -12,7 +12,7 @@
     shadow-radius: 5pt,
     good-word:green,
     bad-word:red,
-));
+),$parent);
 }
 
 @mixin dark_mode($parent:"body") {
@@ -25,9 +25,9 @@
     panel-color: #7775,
     shadow-color:#fffb,
     shadow-radius: 10pt,
-    good-word:green,
-    bad-word:red,
-));
+    good-word:#afa,
+    bad-word:#faa,
+),$parent);
 }
 
 
@@ -41,6 +41,12 @@
 
 @include light_mode("body.lightmode");
 @include dark_mode("body.darkmode");
+
+#style-menu {
+display: inline-block;
+position: relative;
+z-index: 5;
+}
 
 body {
     padding:0;
@@ -111,3 +117,53 @@ body {
     margin: 0 0.25em;
     font-size: 18pt;
 }
+
+@mixin style_button($parent:"body"){
+#{$parent} #style-menu {
+    display: inline-block;
+    position: absolute;
+    right: 1em;
+    top: 1em;
+
+    & button {
+        font-size: 25pt;
+        padding: 0.25em;
+        border-radius: 0.25em;
+        font-weight: normal;
+    }
+}
+
+#{$parent} #style-menu ul {
+    z-index: 300;
+    display: none;
+    position: absolute;
+    right: 0;
+    list-style-type: none; /* Remove bullets */
+    margin: 0; /* Remove margins */
+    padding: 0;
+}
+
+#{$parent} #style-menu li {
+    margin: 0.25em;
+    margin-top:0.5em;
+}
+
+#{$parent} #style-menu ul a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+#{$parent} button.dropbtn{
+    font-weight: 700;
+    background:none;
+    border:none;
+    padding:0;
+}
+
+#{$parent} .dropdown a:hover {background-color: #ddd;}
+#{$parent} #style-menu.show ul {display: block;}
+}
+
+@include style_button();

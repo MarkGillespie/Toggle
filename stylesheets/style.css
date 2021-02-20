@@ -18,10 +18,22 @@
     box-shadow: 0pt 0pt 10pt 0pt #fffb;
   }
   body #found-words span.good {
-    color: green;
+    color: #afa;
   }
   body #found-words span.bad {
-    color: red;
+    color: #faa;
+  }
+  body #style-menu button {
+    color: #fdc;
+    background-color: #6668;
+    box-shadow: 0pt 0pt 0.15em 0pt #fffb;
+  }
+  body #style-menu ul button {
+    border: none;
+    font-size: 1.25em;
+    color: #fdc;
+    background-color: #6668;
+    border-radius: 0.75em;
   }
 }
 @media (prefers-color-scheme: light) {
@@ -49,55 +61,97 @@
   body #found-words span.bad {
     color: red;
   }
+  body #style-menu button {
+    color: #000;
+    background-color: #eeb9;
+    box-shadow: 0pt 0pt 0.15em 0pt #0005;
+  }
+  body #style-menu ul button {
+    border: none;
+    font-size: 1.25em;
+    color: #000;
+    background-color: #eeb9;
+    border-radius: 0.75em;
+  }
 }
-body {
+body.lightmode {
   background-color: #fff;
   color: #000;
 }
-body .title span {
+body.lightmode .title span {
   color: #000;
   background-color: #eeb9;
   border: solid 0.075em #ba89;
 }
-body #guess-word {
+body.lightmode #guess-word {
   color: #000;
   background-color: #fffa;
   box-shadow: 0pt 0pt 5pt 0pt #0005;
 }
-body #found-words {
+body.lightmode #found-words {
   background-color: #fffa;
   box-shadow: 0pt 0pt 5pt 0pt #0005;
 }
-body #found-words span.good {
+body.lightmode #found-words span.good {
   color: green;
 }
-body #found-words span.bad {
+body.lightmode #found-words span.bad {
   color: red;
 }
+body.lightmode #style-menu button {
+  color: #000;
+  background-color: #eeb9;
+  box-shadow: 0pt 0pt 0.15em 0pt #0005;
+}
+body.lightmode #style-menu ul button {
+  border: none;
+  font-size: 1.25em;
+  color: #000;
+  background-color: #eeb9;
+  border-radius: 0.75em;
+}
 
-body {
+body.darkmode {
   background-color: #321;
   color: #eee;
 }
-body .title span {
+body.darkmode .title span {
   color: #fdc;
   background-color: #6668;
   border: solid 0.075em #6468;
 }
-body #guess-word {
+body.darkmode #guess-word {
   color: #eee;
   background-color: #7775;
   box-shadow: 0pt 0pt 10pt 0pt #fffb;
 }
-body #found-words {
+body.darkmode #found-words {
   background-color: #7775;
   box-shadow: 0pt 0pt 10pt 0pt #fffb;
 }
-body #found-words span.good {
-  color: green;
+body.darkmode #found-words span.good {
+  color: #afa;
 }
-body #found-words span.bad {
-  color: red;
+body.darkmode #found-words span.bad {
+  color: #faa;
+}
+body.darkmode #style-menu button {
+  color: #fdc;
+  background-color: #6668;
+  box-shadow: 0pt 0pt 0.15em 0pt #fffb;
+}
+body.darkmode #style-menu ul button {
+  border: none;
+  font-size: 1.25em;
+  color: #fdc;
+  background-color: #6668;
+  border-radius: 0.75em;
+}
+
+#style-menu {
+  display: inline-block;
+  position: relative;
+  z-index: 5;
 }
 
 body {
@@ -168,6 +222,58 @@ body {
 #found-words span {
   margin: 0 0.25em;
   font-size: 18pt;
+}
+
+body #style-menu {
+  display: inline-block;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+body #style-menu button {
+  font-size: 25pt;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  font-weight: normal;
+}
+
+body #style-menu ul {
+  z-index: 300;
+  display: none;
+  position: absolute;
+  right: 0;
+  list-style-type: none;
+  /* Remove bullets */
+  margin: 0;
+  /* Remove margins */
+  padding: 0;
+}
+
+body #style-menu li {
+  margin: 0.25em;
+  margin-top: 0.5em;
+}
+
+body #style-menu ul a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+body button.dropbtn {
+  font-weight: 700;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+body .dropdown a:hover {
+  background-color: #ddd;
+}
+
+body #style-menu.show ul {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */
