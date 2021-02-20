@@ -1,3 +1,28 @@
+body {
+    padding:0;
+    margin:0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.title {
+    font-family: Carrois Gothic;
+    position: relative;
+    z-index: 5;
+    font-size: 55pt;
+    margin: 0;
+    margin-top: 0.125em;
+}
+
+.title span {
+    background-color: #eeb9;
+    padding: 0 0.25em;
+    margin-left: 0.125em;
+    border: solid 0.075em #ba89;
+    border-radius: 0.125em;
+    box-sizing: border-box;
+}
+
 #three-view {
     width: 100vw;
     height: 100vh;
@@ -14,4 +39,16 @@
     top: 0;
     left: 0;
     z-index: -1000;
+}
+
+#guess-word {
+    padding: 6pt;
+    font-size: 28pt;
+    position: absolute;
+    right: 25pt;
+    bottom: 25pt;
+    z-index: 2;
+    box-shadow: 0pt 0pt 5pt 0pt #0005;
+    border-radius: 6pt;
+    border: none;
 }
