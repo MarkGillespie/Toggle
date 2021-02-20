@@ -60,3 +60,10 @@ if __name__ == '__main__':
   board = get_letters(n, m)
   print(board)
   print(find_words(board, n ,m))
+
+# code to generate collins_completion.dawg
+# with open('collins.txt') as f:
+#   contents = f.readlines()
+# contents = [x.strip() for x in contents]
+# d = dawg.CompletionDAWG(contents)
+# d.save('collins_completion.dawg')
