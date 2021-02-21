@@ -3,6 +3,8 @@ import random
 import dawg
 import json
 
+# random.seed(0)
+
 lexicon = 'collins_completion.dawg'
 
 class Node:
@@ -29,10 +31,9 @@ def find_words(board, n, m):
     for j in range(m):
       node = Node()
       node.letter = board[i * m + j]
-      node.neighbors.append(((i + 1) % n, j))
-      node.neighbors.append(((i - 1) % n, j))
-      node.neighbors.append((i, (j + 1) % m))
-      node.neighbors.append((i, (j - 1) % m))
+      for dx in [-1,0,1]:
+        for dy in [-1,0,1]:
+          node.neighbors.append(((i+dy+n)%n, (j+dx+m)%m));
       row.append(node)
     nodes.append(row)
 
