@@ -9,6 +9,7 @@
     $shadow-radius: map-get($map, 'shadow-radius');
     $good-word: map-get($map, 'good-word');
     $bad-word: map-get($map, 'bad-word');
+    $repeated-word: map-get($map, 'repeated-word');
 
     #{$parent} {
         background-color: $background-color;
@@ -36,6 +37,9 @@
         }
         & #found-words span.bad {
             color: $bad-word;
+        }
+        & #found-words span.repeated {
+            color: $repeated-word;
         }
 
         & #style-menu button {

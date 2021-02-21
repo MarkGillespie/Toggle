@@ -12,6 +12,7 @@
     shadow-radius: 5pt,
     good-word:green,
     bad-word:red,
+    repeated-word: brown,
 ),$parent);
 }
 
@@ -27,6 +28,7 @@
     shadow-radius: 10pt,
     good-word:#afa,
     bad-word:#faa,
+    repeated-word: #aaa,
 ),$parent);
 }
 
@@ -99,23 +101,32 @@ body {
     border: none;
 }
 
-#found-words {
-    min-width: 5em;
-    height: 50%;
-    overflow-y: scroll;
-    overflow-x: auto;
+#info-panel {
     position: absolute;
     right: 25pt;
     bottom: 25pt;
     z-index: 1;
+    padding: 1em;
+    min-width: 5em;
+    font-size: 18pt;
+}
+
+#percentage {
+    text-align: right;
+    margin-bottom: 0.5em;
+}
+
+#found-words {
+    min-width: 5em;
+    height: 50vh;
+    overflow-y: scroll;
+    overflow-x: auto;
     display: flex;
     flex-direction: column;
-    padding: 1em;
 }
 
 #found-words span {
     margin: 0 0.25em;
-    font-size: 18pt;
 }
 
 button {

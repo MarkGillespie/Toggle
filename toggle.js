@@ -1,22 +1,35 @@
 import { drawBoard } from "./board.js";
 
 let board_letters = "";
-while (board_letters.length < 100) {
-  board_letters += Math.random()
-    .toString(36)
-    .replace(/[^a-z]+/g, "");
+let valid_words = [];
+let found_words = new Set();
+const valid_word_length = 4;
+
+// while (board_letters.length < 100) {
+//   board_letters += Math.random()
+//     .toString(36)
+//     .replace(/[^a-z]+/g, "");
+// }
+// drawBoard(10, 10, board_letters);
+
+
+function update_percentage() {
+  document.getElementById('percentage').innerHTML = found_words.size.toString() + "/" + valid_words.length.toString();
 }
-drawBoard(10, 10, board_letters);
 
 // TODO
 function checkWordOkay(word) {
-  return word.length > 4;
+  if (valid_words.includes(word.toUpperCase())) {
+    found_words.add(word.toUpperCase());
+    update_percentage();
+    return true;
+  }
 }
 
-function addToWordList(word, isOkay) {
+function addToWordList(word, style) {
   const el = document.createElement("span");
   el.innerHTML = word;
-  el.classList.add(isOkay ? "good" : "bad");
+  el.classList.add(style);
   const wordList = document.getElementById("found-words");
   if (wordList.firstChild) {
     wordList.insertBefore(el, wordList.firstChild);
@@ -27,13 +40,22 @@ function addToWordList(word, isOkay) {
 
 document.getElementById("guess-word").addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    const word = e.target.value;
-    addToWordList(word, checkWordOkay(word));
+    let style = '';
+    const word = e.target.value.toUpperCase();
+    if (found_words.has(word)) {
+      style = 'repeated';
+    } else if (checkWordOkay(word)) {
+      style = 'good';
+    } else {
+      style = 'bad';
+    }
+
+    addToWordList(word, style);
     e.target.value = "";
   }
 });
 
-const base = "http://markjgillespie.com/Toggle/";
+const base = "";
 function newBoard() {
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function () {
@@ -57,8 +79,11 @@ function fetchBoard() {
   xhttp.onload = function () {
     console.log(this.response);
     let boardData = JSON.parse(this.response);
-    // render();
-    // document.getElementById("Spinner").style.display = "none";
+    drawBoard(boardData['m'], boardData['n'], boardData['board']);
+    board_letters = boardData['board'];
+    valid_words = boardData['words'].filter(x => (x.length >= valid_word_length)).sort();
+    update_percentage();
+    console.log(valid_words);
   };
   xhttp.open("GET", base + "NewBoard.php", true);
   xhttp.send();
@@ -66,3 +91,12 @@ function fetchBoard() {
 }
 
 document.getElementById("fetch-board").onclick = fetchBoard;
+
+fetchBoard();
+
+
+
+
+
+
+

@@ -61,7 +61,12 @@ if __name__ == '__main__':
   board = get_letters(n, m)
   words = find_words(board, n, m)
   # print(json.dumps({board:board, words:list(words)}))
-  print(json.dumps({'board':board, 'words':list(words), 'key':{'raw':board[0:min(n,4)], 'mnemonic':'TODO'}}))
+  print(json.dumps({
+    'board':board,
+    'words':list(words),
+    'key':{'raw':board[0:min(n,4)], 'mnemonic':'TODO'},
+    'm': m,
+    'n': n}))
 
 # code to generate collins_completion.dawg
 # with open('collins.txt') as f:
