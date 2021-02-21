@@ -26,7 +26,7 @@
   body #found-words span.repeated {
     color: #aaa;
   }
-  body #style-menu button {
+  body #menu button {
     color: #fdc;
     background-color: #6668;
     box-shadow: 0pt 0pt 0.15em 0pt #fffb;
@@ -67,7 +67,7 @@
   body #found-words span.repeated {
     color: brown;
   }
-  body #style-menu button {
+  body #menu button {
     color: #000;
     background-color: #eeb9;
     box-shadow: 0pt 0pt 0.15em 0pt #0005;
@@ -107,7 +107,7 @@ body.lightmode #found-words span.bad {
 body.lightmode #found-words span.repeated {
   color: brown;
 }
-body.lightmode #style-menu button {
+body.lightmode #menu button {
   color: #000;
   background-color: #eeb9;
   box-shadow: 0pt 0pt 0.15em 0pt #0005;
@@ -147,7 +147,7 @@ body.darkmode #found-words span.bad {
 body.darkmode #found-words span.repeated {
   color: #aaa;
 }
-body.darkmode #style-menu button {
+body.darkmode #menu button {
   color: #fdc;
   background-color: #6668;
   box-shadow: 0pt 0pt 0.15em 0pt #fffb;
@@ -250,17 +250,19 @@ button {
   z-index: 10;
 }
 
-body #style-menu {
+body #menu {
   display: inline-block;
   position: absolute;
   right: 1em;
   top: 1em;
 }
-body #style-menu button {
+body #menu button {
   font-size: 25pt;
   padding: 0.25em;
   border-radius: 0.25em;
   font-weight: normal;
+  background: none;
+  border: none;
 }
 
 body #style-menu ul {
@@ -272,30 +274,13 @@ body #style-menu ul {
   /* Remove bullets */
   margin: 0;
   /* Remove margins */
+  margin-top: 1em;
   padding: 0;
 }
 
 body #style-menu li {
   margin: 0.25em;
   margin-top: 0.5em;
-}
-
-body #style-menu ul a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-body button.dropbtn {
-  font-weight: 700;
-  background: none;
-  border: none;
-  padding: 0;
-}
-
-body .dropdown a:hover {
-  background-color: #ddd;
 }
 
 body #style-menu.show ul {

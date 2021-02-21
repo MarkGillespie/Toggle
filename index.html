@@ -63,15 +63,17 @@
         </script>
     </head>
     <body>
-        <div id="style-menu" class="jsonly">
+
+        <div id="menu">
+            <button id="new-board">New Board</button>
             <button class="dropbtn navbar_item" onclick="doDropdown()">Style</button>
+            <div id="style-menu">
             <ul>
                 <li><button onclick="setStyle('lightmode');">Light Mode</button></li>
                 <li><button onclick="setStyle('darkmode');">Dark Mode</button></li>
             </ul>
+            </div>
         </div>
-        <button id="new-board">New Board</button>
-        <button id="fetch-board">Fetch Board</button>
 
         <div id="three-view" ></div>
         <div class="title">

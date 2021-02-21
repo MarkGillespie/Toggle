@@ -108,6 +108,4 @@ function fetchBoard() {
   // document.getElementById("Spinner").style.display = "inline-block";
 }
 
-document.getElementById("fetch-board").onclick = fetchBoard;
-
 fetchBoard();
