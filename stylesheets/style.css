@@ -224,6 +224,11 @@ body {
   font-size: 18pt;
 }
 
+button {
+  position: relative;
+  z-index: 10;
+}
+
 body #style-menu {
   display: inline-block;
   position: absolute;
