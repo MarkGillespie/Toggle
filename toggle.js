@@ -12,9 +12,9 @@ const valid_word_length = 4;
 // }
 // drawBoard(10, 10, board_letters);
 
-
 function update_percentage() {
-  document.getElementById('percentage').innerHTML = found_words.size.toString() + "/" + valid_words.length.toString();
+  document.getElementById("percentage").innerHTML =
+    found_words.size.toString() + "/" + valid_words.length.toString();
 }
 
 // TODO
@@ -40,14 +40,14 @@ function addToWordList(word, style) {
 
 document.getElementById("guess-word").addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    let style = '';
+    let style = "";
     const word = e.target.value.toUpperCase();
     if (found_words.has(word)) {
-      style = 'repeated';
+      style = "repeated";
     } else if (checkWordOkay(word)) {
-      style = 'good';
+      style = "good";
     } else {
-      style = 'bad';
+      style = "bad";
     }
 
     addToWordList(word, style);
@@ -55,17 +55,38 @@ document.getElementById("guess-word").addEventListener("keydown", (e) => {
   }
 });
 
+// boardData should be a JSON object containing
+// {
+//  board: "LETTERS",
+//  words: ["valid", words"],
+//  key: {raw: "FOUR", menmonic: "Nice Words"},
+//  m: m,
+//  n: n
+// }
+function processNewBoard(boardData) {
+  drawBoard(boardData["m"], boardData["n"], boardData["board"]);
+  board_letters = boardData["board"];
+  valid_words = boardData["words"]
+    .filter((x) => x.length >= valid_word_length)
+    .sort();
+  update_percentage();
+  console.log(valid_words);
+}
+
+const boardSize = 10;
 const base = "";
 function newBoard() {
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function () {
     console.log(this.response);
-    // boardData = JSON.parse(this.response);
-    // render();
+    const boardData = JSON.parse(this.response);
+    processNewBoard(boardData);
     // document.getElementById("Spinner").style.display = "none";
   };
   xhttp.open("POST", base + "NewBoard.php", true);
-  let params = "board=" + board_letters;
+
+  // TODO: server doesn't process boardSize
+  let params = "board=" + board_letters + "&n=" + boardSize;
   //Send the proper header information along with the request
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send(params);
@@ -78,12 +99,8 @@ function fetchBoard() {
   let xhttp = new XMLHttpRequest();
   xhttp.onload = function () {
     console.log(this.response);
-    let boardData = JSON.parse(this.response);
-    drawBoard(boardData['m'], boardData['n'], boardData['board']);
-    board_letters = boardData['board'];
-    valid_words = boardData['words'].filter(x => (x.length >= valid_word_length)).sort();
-    update_percentage();
-    console.log(valid_words);
+    const boardData = JSON.parse(this.response);
+    processNewBoard(boardData);
   };
   xhttp.open("GET", base + "NewBoard.php", true);
   xhttp.send();
@@ -93,10 +110,3 @@ function fetchBoard() {
 document.getElementById("fetch-board").onclick = fetchBoard;
 
 fetchBoard();
-
-
-
-
-
-
-

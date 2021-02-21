@@ -1,7 +1,7 @@
+import sys
 import random
 import dawg
 import json
-import sys
 
 lexicon = 'collins_completion.dawg'
 

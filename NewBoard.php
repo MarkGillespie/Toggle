@@ -7,7 +7,8 @@
             $json = json_decode($file_contents, true);
             if ($json['board'] == $_POST['board']) {
                 ftruncate($fp, 0);
-                $new_board_data = shell_exec('python3 generate_board_data.py 12 > board.json');
+                shell_exec('python3 generate_board_data.py 10 > board.json');
+                $new_board_data = shell_exec('cat board.json');
                 rewind($fp);
                 fwrite($fp, $new_board_data);
             } else {
