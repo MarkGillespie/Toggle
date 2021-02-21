@@ -88,6 +88,7 @@ function newBoard() {
   // TODO: server doesn't process boardSize
   let params = "board=" + board_letters + "&n=" + boardSize;
   //Send the proper header information along with the request
+  console.log(params);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send(params);
   // document.getElementById("Spinner").style.display = "inline-block";
