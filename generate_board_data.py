@@ -5,7 +5,8 @@ import json
 
 # random.seed(0)
 
-lexicon = 'collins_completion.dawg'
+# lexicon = 'collins_completion.dawg'
+lexicon = 'NWL20.py.dawg'
 
 class Node:
   def __init__(self):
