@@ -249,11 +249,12 @@ function shift(n_shift_x, n_shift_y, n_rows, n_cols) {
   borus.geometry.attributes.uv.needsUpdate = true;
 }
 
+init(document.getElementById("three-view"));
+
 background_image.addEventListener(
   "load",
   function () {
     background_image.loaded = true;
-    init(document.getElementById("three-view"));
 
     // Broken :'(
     // shift(0, 3, 10, 10);
