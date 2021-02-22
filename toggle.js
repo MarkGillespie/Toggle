@@ -1,4 +1,5 @@
 import { drawBoard } from "./board.js";
+import { find_all_words } from "./find_words.js";
 
 let board_letters = "";
 let valid_words = [];
@@ -70,7 +71,12 @@ function processNewBoard(boardData) {
     .filter((x) => x.length >= valid_word_length)
     .sort();
   update_percentage();
-  console.log(valid_words);
+
+  // EXPERIMENTAL - run dawg in browser
+  // console.log(boardData["words"].length);
+  // console.time("computing valid words");
+  // console.log(find_all_words(board_letters, boardData["m"], boardData["n"]));
+  // console.timeEnd("computing valid words");
 }
 
 const boardSize = 10;

@@ -2,6 +2,7 @@
 
 import sys
 import dawg
+import json
 pos = 0
 
 
@@ -142,6 +143,10 @@ if __name__ == '__main__':
     # words.sort()
     # with open(infile + "_all.txt", "w") as f:
     #     f.write("\n".join(words))
+
+    # words.sort()
+    # with open(infile+"_all.json", "w") as f:
+    #     f.write(json.dumps(words))
 
     d = dawg.CompletionDAWG(words)
     d.save(infile+".py.dawg")
