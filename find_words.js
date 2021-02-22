@@ -1,6 +1,5 @@
 import "https://unpkg.com/tiny-trie@0.2.6/dist/tiny-trie.min.js";
-// import "https://unpkg.com/tiny-trie@0.2.6/dist/packed-trie.min.js";
-import "https://unpkg.com/tiny-trie@0.2.6/dist/packed-trie.js";
+import { PackedPrefixTinyTrie } from "./fast_packed_trie.js";
 
 //============================================================
 //     construct a packed dawg from a list named "lexicon"
@@ -33,16 +32,19 @@ import "https://unpkg.com/tiny-trie@0.2.6/dist/packed-trie.js";
 // console.log(packed.search("AVOC", { prefix: true }));
 // console.timeEnd("query-prefix");
 
-const dawg = new TinyTrie.PackedTrie(packed_lexicon);
-console.log(dawg.search("ABREGE"));
+const dawg = new PackedPrefixTinyTrie(packed_lexicon);
+
+let total_blowup = 0;
+let n_items = 0;
 
 let word_list = undefined;
 function bfs(path, nodes, prefix = "") {
   const new_prefix = prefix + path[path.length - 1].letter;
 
-  const first_match = dawg.search(new_prefix, { prefix: true, first: true });
-  if (first_match !== null) {
-    if (new_prefix === first_match) {
+  const query = dawg.search(new_prefix);
+  if (query.prefix) {
+    n_items += 1;
+    if (query.inDict) {
       word_list.add(new_prefix);
     }
     path[path.length - 1].neighbors.forEach((n) => {
@@ -78,6 +80,7 @@ function find_all_words(board_letters, m, n) {
       bfs([nodes[i][j]], nodes);
     }
   }
+
   return [...word_list];
 }
 
