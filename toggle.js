@@ -1,4 +1,5 @@
 import { drawBoard } from "./board.js";
+import { find_all_words } from "./find_words.js";
 
 let game_id = 0;
 let board_letters = "";
@@ -71,28 +72,33 @@ function processNewBoard(boardData) {
     .filter((x) => x.length >= valid_word_length)
     .sort();
   update_percentage();
-  console.log(valid_words);
 }
+
+const scrabble_letters =
+  "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ";
 
 const boardSize = 10;
 const base = "";
 function newBoard() {
-  let xhttp = new XMLHttpRequest();
-  xhttp.onload = function () {
-    console.log(this.response);
-    const boardData = JSON.parse(this.response);
-    processNewBoard(boardData);
-    // document.getElementById("Spinner").style.display = "none";
-  };
-  xhttp.open("POST", base + "NewBoard.php", true);
+  const m = boardSize;
+  const n = boardSize;
+  let board = "";
+  while (board.length < m * n) {
+    board += scrabble_letters.charAt(Math.random() * scrabble_letters.length);
+  }
 
-  // TODO: server doesn't process boardSize
-  let params = "board=" + board_letters + "&n=" + boardSize;
-  //Send the proper header information along with the request
-  console.log(params);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(params);
-  // document.getElementById("Spinner").style.display = "inline-block";
+  console.time("finding words");
+  const words = find_all_words(board, m, n).sort();
+  console.timeEnd("finding words");
+  const boardData = {
+    board: board,
+    words: words,
+    m: m,
+    n: n,
+  };
+
+  // TODO sync new board with firebase
+  processNewBoard(boardData);
 }
 
 document.getElementById("new-board").onclick = newBoard;
