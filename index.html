@@ -84,6 +84,30 @@
             <div id="percentage"></div>
             <div id="found-words"></div>
         </div>
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-database.js"></script>
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+             https://firebase.google.com/docs/web/setup#available-libraries -->
+
+        <script>
+            var firebaseConfig = {
+                apiKey: "AIzaSyArl01Xz0ZEWKsTGAZ425PNHuyibphqHIs",
+                authDomain: "toggle-456ab.firebaseapp.com",
+                databaseURL: "https://toggle-456ab-default-rtdb.firebaseio.com",
+                projectId: "toggle-456ab",
+                storageBucket: "toggle-456ab.appspot.com",
+                messagingSenderId: "203386934021",
+                appId: "1:203386934021:web:32ab5f45fa02bdb9da5d6c"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            var database = firebase.database();
+        </script>
+
         <script src="toggle.js" type="module"></script>
     </body>
 </html>

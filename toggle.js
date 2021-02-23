@@ -1,5 +1,6 @@
 import { drawBoard } from "./board.js";
 
+let game_id = 0;
 let board_letters = "";
 let valid_words = [];
 let found_words = new Set();
@@ -97,15 +98,18 @@ function newBoard() {
 document.getElementById("new-board").onclick = newBoard;
 
 function fetchBoard() {
-  let xhttp = new XMLHttpRequest();
-  xhttp.onload = function () {
-    console.log(this.response);
-    const boardData = JSON.parse(this.response);
-    processNewBoard(boardData);
-  };
-  xhttp.open("GET", base + "NewBoard.php", true);
-  xhttp.send();
+  // let xhttp = new XMLHttpRequest();
+  // xhttp.onload = function () {
+  //   console.log(this.response);
+  //   const boardData = JSON.parse(this.response);
+  //   processNewBoard(boardData);
+  // };
+  // xhttp.open("GET", base + "NewBoard.php", true);
+  // xhttp.send();
   // document.getElementById("Spinner").style.display = "inline-block";
+  database.ref("boards").once("value").then(function(snapshot) {
+    console.log(snapshot);
+  });
 }
 
 fetchBoard();
