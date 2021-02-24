@@ -118,6 +118,7 @@ const scrabble_letters =
 const boardSize = 10;
 const base = "";
 function newBoard() {
+  document.getElementById("spinner").style.opacity = 1;
   const newBoardRef = database.ref("boards").push();
 
   const m = boardSize;
@@ -149,6 +150,7 @@ function newBoard() {
   // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
   // What is page : 1 ???? and title 1 ????
   history.pushState({ page: 1 }, "title 1", `?board=${game_id}`);
+  document.getElementById("spinner").style.opacity = 0;
 }
 
 document.getElementById("new-board").onclick = newBoard;
