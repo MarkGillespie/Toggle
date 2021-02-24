@@ -136,7 +136,7 @@ function fetchBoard() {
     .once("value")
     .then(function (snapshot) {
       console.log(snapshot.toJSON());
-      let data = snapshot.toJSON()[0];
+      let data = snapshot.toJSON()[game_id];
       data.words = Object.values(data.words);
       processNewBoard(data);
       loadFoundWords(Object.values(data.found_words));
