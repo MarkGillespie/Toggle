@@ -1,8 +1,10 @@
-import { drawBoard } from "./board.js";
+import { drawBoard, highlightString } from "./board.js";
 import { find_all_words } from "./find_words.js";
 
 let game_id = undefined;
 let board_letters = "";
+let m = 10;
+let n = 10;
 let valid_words = [];
 let found_words = new Set();
 const valid_word_length = 4;
@@ -64,7 +66,7 @@ function addToWordList(word, style) {
   update_percentage();
 }
 
-document.getElementById("guess-word").addEventListener("keydown", (e) => {
+document.getElementById("guess-word").addEventListener("keyup", (e) => {
   if (e.key === "Enter") {
     let style = "";
     const word = standardize(e.target.value);
@@ -82,6 +84,8 @@ document.getElementById("guess-word").addEventListener("keydown", (e) => {
     }
 
     e.target.value = "";
+  } else {
+    highlightString(board_letters, m, n, standardize(e.target.value));
   }
 });
 
@@ -94,6 +98,8 @@ document.getElementById("guess-word").addEventListener("keydown", (e) => {
 //  n: n
 // }
 function processNewBoard(boardData) {
+  m = boardData["m"];
+  n = boardData["n"];
   drawBoard(boardData["m"], boardData["n"], boardData["board"]);
   board_letters = boardData["board"];
   valid_words = boardData["words"]
