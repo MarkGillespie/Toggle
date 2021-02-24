@@ -21,12 +21,16 @@ function update_percentage() {
 
 // TODO
 function checkWordOkay(word) {
-  return valid_words.includes(word.toUpperCase())
+  return valid_words.includes(word.toUpperCase());
+}
+
+function standardize(word) {
+  return word.replace(/[^a-zA-Z]/g, "").toUpperCase();
 }
 
 function addToWordList(word, style) {
   const el = document.createElement("span");
-  el.innerHTML = word;
+  el.innerHTML = standardize(word);
   el.classList.add(style);
   const wordList = document.getElementById("found-words");
   if (wordList.firstChild) {
@@ -34,24 +38,27 @@ function addToWordList(word, style) {
   } else {
     wordList.appendChild(el);
   }
-  found_words.add(word.toUpperCase());
+  if (style == "good") {
+    found_words.add(word.toUpperCase());
+  }
   update_percentage();
 }
 
 document.getElementById("guess-word").addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     let style = "";
-    const word = e.target.value.toUpperCase();
+    const word = standardize(e.target.value);
     if (found_words.has(word)) {
-        addToWordList(word,"repeated" );
+      addToWordList(word, "repeated");
     } else if (checkWordOkay(word)) {
-        addToWordList(word, 'good');
-        database.ref('boards').child(game_id).child("found_words").set(
-            [...found_words]
-        );
-
+      addToWordList(word, "good");
+      database
+        .ref("boards")
+        .child(game_id)
+        .child("found_words")
+        .set([...found_words]);
     } else {
-        addToWordList(word, 'bad');
+      addToWordList(word, "bad");
     }
 
     e.target.value = "";
@@ -72,16 +79,17 @@ function processNewBoard(boardData) {
   valid_words = boardData["words"]
     .filter((x) => x.length >= valid_word_length)
     .sort();
+  console.log(valid_words);
   update_percentage();
 }
 
 function loadFoundWords(newWords) {
-    found_words = new Set(newWords);
-    let wordList = document.getElementById("found-words");
-    wordList.innerHTML = "";
-    found_words.forEach(word => {
-        addToWordList(word, 'good');
-    })
+  found_words = new Set(newWords);
+  let wordList = document.getElementById("found-words");
+  wordList.innerHTML = "";
+  found_words.forEach((word) => {
+    addToWordList(word, "good");
+  });
 }
 
 const scrabble_letters =
@@ -123,18 +131,25 @@ function fetchBoard() {
   // xhttp.open("GET", base + "NewBoard.php", true);
   // xhttp.send();
   // document.getElementById("Spinner").style.display = "inline-block";
-  database.ref("boards").once("value").then(function(snapshot) {
+  database
+    .ref("boards")
+    .once("value")
+    .then(function (snapshot) {
       console.log(snapshot.toJSON());
       let data = snapshot.toJSON()[0];
       data.words = Object.values(data.words);
       processNewBoard(data);
       loadFoundWords(Object.values(data.found_words));
-  });
-    database.ref("boards").child(game_id).child('found_words').on("child_added", function(snapshot) {
-        let word = snapshot.toJSON();
-        if (!found_words.has(word)) {
-            addToWordList(snapshot.toJSON(), 'good');
-        }
+    });
+  database
+    .ref("boards")
+    .child(game_id)
+    .child("found_words")
+    .on("child_added", function (snapshot) {
+      let word = snapshot.toJSON();
+      if (!found_words.has(word)) {
+        addToWordList(snapshot.toJSON(), "good");
+      }
     });
 }
 
