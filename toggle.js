@@ -84,9 +84,8 @@ document.getElementById("guess-word").addEventListener("keyup", (e) => {
     }
 
     e.target.value = "";
-  } else {
-    highlightString(board_letters, m, n, standardize(e.target.value));
   }
+  highlightString(board_letters, m, n, standardize(e.target.value));
 });
 
 // boardData should be a JSON object containing

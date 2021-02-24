@@ -8,12 +8,17 @@ import {
   TorusGeometry,
   CanvasTexture,
   MeshPhongMaterial,
+  ShaderMaterial,
   Mesh,
   RepeatWrapping,
   TextureLoader,
+  ImageUtils,
+  ShaderLib,
 } from "https://unpkg.com/three@0.125.1/build/three.module.js";
 import { WEBGL } from "https://unpkg.com/three@0.125.1/examples/jsm/WebGL.js";
 import { TrackballControls } from "https://unpkg.com/three@0.125.1/examples/jsm/controls/TrackballControls.js";
+
+import { find_all_matches } from "./find_words.js";
 
 if (!WEBGL.isWebGLAvailable()) alert(WEBGL.getWebGLErrorMessage());
 
@@ -30,12 +35,12 @@ let down_pressed = 0;
 
 // Initialize the canvas to be tiny. We'll resize it later once our image loads
 // But this makes the creation of our initial CanvasTexture much faster
-const canvas = document.createElement("canvas");
-canvas.width = 10;
-canvas.height = canvas.width;
-const background_image = new Image();
-background_image.src = "./img/wood-color.jpg";
-background_image.loaded = false;
+const textCanvas = document.createElement("canvas");
+textCanvas.width = 10;
+textCanvas.height = textCanvas.width;
+const selectionCanvas = document.createElement("canvas");
+selectionCanvas.width = 10;
+selectionCanvas.height = selectionCanvas.width;
 
 function init(container_) {
   container = container_;
@@ -89,12 +94,65 @@ function init(container_) {
   const geo = new TorusGeometry(10, 7, 100, 100);
 
   // Texture
-  const tex = new CanvasTexture(canvas);
-  tex.wrapS = RepeatWrapping;
-  tex.wrapT = RepeatWrapping;
-  const mat = new MeshPhongMaterial({
-    map: tex,
-    shininess: 0.25,
+  const tText = new CanvasTexture(textCanvas);
+  tText.wrapS = RepeatWrapping;
+  tText.wrapT = RepeatWrapping;
+  const tSelection = new CanvasTexture(selectionCanvas);
+  tSelection.wrapS = RepeatWrapping;
+  tSelection.wrapT = RepeatWrapping;
+
+  const tWood = ImageUtils.loadTexture("./img/wood-color.jpg");
+  tWood.wrapS = RepeatWrapping;
+  tWood.wrapT = RepeatWrapping;
+
+  const mat = new ShaderMaterial({
+    uniforms: {
+      tWood: {
+        type: "t",
+        value: tWood,
+      },
+      tText: {
+        type: "t",
+        value: tText,
+      },
+      tSelection: {
+        type: "t",
+        value: tSelection,
+      },
+    },
+    vertexShader: `
+varying vec2 vUv;
+varying vec3 vNormal;
+void main()
+{
+    vUv = uv;
+    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+
+    vNormal = normalize( mat3( modelViewMatrix ) * normal );
+    gl_Position = projectionMatrix * mvPosition;
+}`,
+    fragmentShader: `
+uniform sampler2D tWood;
+uniform sampler2D tText;
+uniform sampler2D tSelection;
+uniform float shininess;
+
+varying vec2 vUv;
+varying vec3 vNormal;
+
+void main(void)
+{
+    vec3 c;
+    vec4 cText = texture2D(tText, vUv);
+    vec4 cWood = texture2D(tWood, vUv);
+    vec4 cSelection = texture2D(tSelection, vUv);
+
+    c = cText.rgb * cText.a + cSelection.rgb * cSelection.a * (1.- cText.a) + cWood.rgb * (1.-cText.a) * (1.-cSelection.a);
+
+    float specularStrength = min(normalize(vNormal).z + 0.25, 1.5);
+	gl_FragColor = vec4( c*specularStrength, 1. );
+}
+`,
   });
   borus = new Mesh(geo, mat);
   scene.add(borus);
@@ -129,54 +187,32 @@ function animate() {
 }
 
 // Only works if background image has been loaded
-function unsafeDrawBoard(num_columns, num_rows, board_letters) {
+function drawBoard(num_columns, num_rows, board_letters) {
   // Make canvas really big to get crisp fonts
-  canvas.width = 5000;
-  canvas.height = canvas.width;
+  textCanvas.width = 2000;
+  textCanvas.height = textCanvas.width;
 
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#eef";
+  const w = textCanvas.width;
+  const h = textCanvas.height;
 
-  const bigFont = Math.floor(canvas.width / (num_rows + 3));
+  const ctx = textCanvas.getContext("2d");
+
+  const bigFont = Math.floor(w / (num_rows + 3));
   const smallFont = Math.floor(bigFont * 0.6);
-  const lineWeight = Math.floor(0.003 * canvas.width);
-
-  // ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-  ctx.drawImage(background_image, 0, 0, canvas.width / 2, canvas.height / 2);
-  ctx.drawImage(
-    background_image,
-    canvas.width / 2,
-    0,
-    canvas.width / 2,
-    canvas.height / 2
-  );
-  ctx.drawImage(
-    background_image,
-    0,
-    canvas.height / 2,
-    canvas.width / 2,
-    canvas.height / 2
-  );
-  ctx.drawImage(
-    background_image,
-    canvas.width / 2,
-    canvas.height / 2,
-    canvas.width / 2,
-    canvas.height / 2
-  );
+  const lineWeight = Math.floor(0.003 * w);
 
   ctx.beginPath();
   ctx.lineWidth = lineWeight;
 
-  const col_w = canvas.width / num_columns;
-  const row_h = canvas.height / num_rows;
+  const col_w = w / num_columns;
+  const row_h = h / num_rows;
   for (let i = 0; i < num_columns + 1; i++) {
     ctx.moveTo(i * col_w, 0);
-    ctx.lineTo(i * col_w, canvas.height);
+    ctx.lineTo(i * col_w, h);
   }
   for (let i = 0; i < num_rows + 1; i++) {
     ctx.moveTo(0, i * row_h);
-    ctx.lineTo(canvas.width, i * row_h);
+    ctx.lineTo(w, i * row_h);
   }
   ctx.stroke();
 
@@ -199,30 +235,49 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
         ctx.moveTo((j + 0.25) * col_w, (i + 0.8) * row_h);
         ctx.lineTo((j + 0.75) * col_w, (i + 0.8) * row_h);
       }
+
       counter++;
     }
   }
   ctx.stroke();
-  if (borus) borus.material.map.needsUpdate = true;
 
-  // setTimeout(() => {
-  //   canvas.width = 10;
-  //   canvas.height = canvas.width;
-  // }, 100);
-
-  // ctx.arc(canvas.offsetWidth / 2, canvas.offsetHeight / 2, canvas.offsetHeight / 2 - 20, 0, 2 * Math.PI);
+  if (borus) borus.material.uniforms.tText.value.needsUpdate = true;
 }
 
-// if background image has been loaded, just call unsafeDrawBoard
-// Otherwise, wait until the image has been loaded and then make call
-function drawBoard(num_columns, num_rows, board_letters) {
-  if (background_image.loaded) {
-    unsafeDrawBoard(num_columns, num_rows, board_letters);
-  } else {
-    background_image.addEventListener("load", function () {
-      unsafeDrawBoard(num_columns, num_rows, board_letters);
-    });
-  }
+function drawSelection(num_columns, num_rows, highlighted) {
+  selectionCanvas.width = 100;
+  selectionCanvas.height = selectionCanvas.width;
+
+  const w = selectionCanvas.width;
+  const h = selectionCanvas.height;
+
+  const ctx = selectionCanvas.getContext("2d");
+
+  const col_w = w / num_columns;
+  const row_h = h / num_rows;
+
+  ctx.beginPath();
+  ctx.fillStyle = "#fe33";
+  highlighted.forEach((count) => {
+    const i = Math.floor(count / num_columns);
+    const j = count % num_columns;
+    ctx.fillRect(j * col_w, i * row_h, col_w, row_h);
+  });
+  ctx.stroke();
+  if (borus) borus.material.uniforms.tSelection.value.needsUpdate = true;
+}
+
+function highlightString(boardLetters, num_columns, num_rows, str) {
+  // const highlighted = [];
+  // for (let i = 0; i < boardLetters.length; i++)
+  //   if (str.includes(boardLetters[i])) highlighted.push(i);
+  const highlighted = find_all_matches(
+    boardLetters,
+    num_columns,
+    num_rows,
+    str.replace("QU", "Q")
+  );
+  drawSelection(num_columns, num_rows, highlighted);
 }
 
 // Doesn't work because a weird cut develops
@@ -250,18 +305,7 @@ function shift(n_shift_x, n_shift_y, n_rows, n_cols) {
 }
 
 init(document.getElementById("three-view"));
-
-background_image.addEventListener(
-  "load",
-  function () {
-    background_image.loaded = true;
-
-    // Broken :'(
-    // shift(0, 3, 10, 10);
-    animate();
-  },
-  false
-);
+animate();
 
 window.addEventListener("keydown", (e) => {
   switch (e.key) {
@@ -297,4 +341,4 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-export { drawBoard };
+export { drawBoard, highlightString };
