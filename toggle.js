@@ -17,6 +17,22 @@ const valid_word_length = 4;
 function update_percentage() {
   document.getElementById("percentage").innerHTML =
     found_words.size.toString() + "/" + valid_words.length.toString();
+
+  const isShort = (x) => x.length == 4 || x.length == 5;
+  const isMed = (x) => x.length == 6 || x.length == 7;
+  const isLong = (x) => x.length >= 8;
+
+  // Detailed stats
+  const short = [...found_words].filter(isShort).length;
+  const totalShort = valid_words.filter(isShort).length;
+  const med = [...found_words].filter(isMed).length;
+  const totalMed = valid_words.filter(isMed).length;
+  const long = [...found_words].filter(isLong).length;
+  const totalLong = valid_words.filter(isLong).length;
+
+  document.getElementById(
+    "detailed-stats"
+  ).innerHTML = `4-5 : ${short}/${totalShort}<br/> 6-7: ${med}/${totalMed} <br/> 8+: ${long}/ ${totalLong}`;
 }
 
 // TODO
