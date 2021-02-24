@@ -203,4 +203,8 @@ function fetchBoard() {
   }
 }
 
-fetchBoard();
+if (windowLoaded) {
+  fetchBoard();
+} else {
+  window.onload = fetchBoard();
+}
