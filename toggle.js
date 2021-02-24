@@ -141,14 +141,14 @@ function newBoard() {
 
   newBoardRef.set(boardData);
   console.log(newBoardRef.key);
-  const boardName = newBoardRef.key;
+  game_id = newBoardRef.key;
 
   // TODO sync new board with firebase
   processNewBoard(boardData);
 
   // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
   // What is page : 1 ???? and title 1 ????
-  history.pushState({ page: 1 }, "title 1", `?board=${boardName}`);
+  history.pushState({ page: 1 }, "title 1", `?board=${game_id}`);
 }
 
 document.getElementById("new-board").onclick = newBoard;
@@ -183,8 +183,8 @@ function fetchBoard() {
 
     boardRef.once("value").then(function (snapshot) {
       const snapJSON = snapshot.toJSON();
-      let boardName = Object.keys(snapJSON)[0];
-      console.log(boardName);
+      game_id = Object.keys(snapJSON)[0];
+      console.log(game_id);
       let data = Object.values(snapJSON)[0];
       data.words = Object.values(data.words);
       processNewBoard(data);
@@ -192,7 +192,7 @@ function fetchBoard() {
 
       // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
       // What is page : 1 ???? and title 1 ????
-      history.pushState({ page: 1 }, "title 1", `?board=${boardName}`);
+      history.pushState({ page: 1 }, "title 1", `?board=${game_id}`);
     });
     boardRef.ref.child("found_words").on("child_added", function (snapshot) {
       let word = snapshot.toJSON();
