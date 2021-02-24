@@ -56,12 +56,23 @@ function bfs(path, nodes, prefix = "") {
   }
 }
 
+function expandLetter(letter) {
+  if (letter == "Q") {
+    return "QU";
+  } else {
+    return letter;
+  }
+}
+
 function find_all_words(board_letters, m, n) {
   const nodes = [];
   for (let i = 0; i < n; i++) {
     const row = [];
     for (let j = 0; j < m; j++) {
-      const node = { letter: board_letters[i * m + j], neighbors: [] };
+      const node = {
+        letter: expandLetter(board_letters[i * m + j]),
+        neighbors: [],
+      };
       for (let dx = -1; dx <= 1; dx++) {
         for (let dy = -1; dy <= 1; dy++) {
           if (dx != 0 || dy != 0) {
