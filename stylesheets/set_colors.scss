@@ -10,6 +10,7 @@
     $good-word: map-get($map, 'good-word');
     $bad-word: map-get($map, 'bad-word');
     $repeated-word: map-get($map, 'repeated-word');
+    $spinner-color: map-get($map, 'spinner-color');
 
     #{$parent} {
         background-color: $background-color;
@@ -56,6 +57,10 @@
                 background-color: $tile-color;
                 border-radius: 0.75em;
             }
+        }
+
+        & .lds-dual-ring:after {
+            border-color: $spinner-color transparent $spinner-color transparent;
         }
     }
 }

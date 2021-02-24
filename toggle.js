@@ -168,6 +168,7 @@ function fetchBoard() {
       data.words = Object.values(data.words);
       processNewBoard(data);
       if (data.found_words) loadFoundWords(Object.values(data.found_words));
+      document.getElementById("spinner").style.opacity = 0;
     });
     boardRef.child("found_words").on("child_added", function (snapshot) {
       let word = snapshot.toJSON();
@@ -193,6 +194,7 @@ function fetchBoard() {
       // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
       // What is page : 1 ???? and title 1 ????
       history.pushState({ page: 1 }, "title 1", `?board=${game_id}`);
+      document.getElementById("spinner").style.display = "none";
     });
     boardRef.ref.child("found_words").on("child_added", function (snapshot) {
       let word = snapshot.toJSON();
