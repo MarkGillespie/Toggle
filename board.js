@@ -11,9 +11,11 @@ import {
   Mesh,
   RepeatWrapping,
   TextureLoader,
+  DoubleSide,
 } from "https://unpkg.com/three@0.125.1/build/three.module.js";
 import { WEBGL } from "https://unpkg.com/three@0.125.1/examples/jsm/WebGL.js";
 import { TrackballControls } from "https://unpkg.com/three@0.125.1/examples/jsm/controls/TrackballControls.js";
+import { OBJLoader } from "https://unpkg.com/three@0.125.1/examples/jsm/loaders/OBJLoader.js";
 
 if (!WEBGL.isWebGLAvailable()) alert(WEBGL.getWebGLErrorMessage());
 
@@ -95,9 +97,20 @@ function init(container_) {
   const mat = new MeshPhongMaterial({
     map: tex,
     shininess: 0.25,
+    transparent: true,
+    alphaTest: 0.5,
+    side: DoubleSide,
   });
-  borus = new Mesh(geo, mat);
-  scene.add(borus);
+
+  const loader = new OBJLoader();
+  loader.load("klein.obj", function (obj) {
+    borus = obj.children[0];
+    console.log(obj);
+    borus.material = mat;
+    scene.add(borus);
+  });
+  // borus = new Mesh(geo, mat);
+  // scene.add(borus);
 }
 
 function render() {
@@ -114,16 +127,18 @@ function animate() {
   requestAnimationFrame(animate);
   if (controls) controls.update();
 
-  const uv = borus.geometry.attributes.uv.array;
-  const num_points = uv.length / 2;
-  const scrolling_horizontal = right_pressed - left_pressed;
-  const scrolling_vertical = up_pressed - down_pressed;
-  for (let i = 0; i < num_points; i++) {
-    uv[2 * i] -= scrolling_horizontal * 0.005;
-    uv[2 * i + 1] -= scrolling_vertical * 0.005;
+  if (borus && borus.geometry) {
+    const uv = borus.geometry.attributes.uv.array;
+    const num_points = uv.length / 2;
+    const scrolling_horizontal = right_pressed - left_pressed;
+    const scrolling_vertical = up_pressed - down_pressed;
+    for (let i = 0; i < num_points; i++) {
+      uv[2 * i] -= scrolling_horizontal * 0.005;
+      uv[2 * i + 1] -= scrolling_vertical * 0.005;
+    }
+    borus.geometry.attributes.uv.needsUpdate =
+      scrolling_horizontal != 0 || scrolling_vertical != 0;
   }
-  borus.geometry.attributes.uv.needsUpdate =
-    scrolling_horizontal != 0 || scrolling_vertical != 0;
 
   render();
 }
@@ -173,10 +188,12 @@ function unsafeDrawBoard(num_columns, num_rows, board_letters) {
   for (let i = 0; i < num_columns + 1; i++) {
     ctx.moveTo(i * col_w, 0);
     ctx.lineTo(i * col_w, canvas.height);
+    // ctx.clearRect(i * col_w - lineWeight / 2, 0, lineWeight, canvas.height);
   }
   for (let i = 0; i < num_rows + 1; i++) {
     ctx.moveTo(0, i * row_h);
     ctx.lineTo(canvas.width, i * row_h);
+    // ctx.clearRect(0, i * row_h - lineWeight / 2, canvas.width, lineWeight);
   }
   ctx.stroke();
 
