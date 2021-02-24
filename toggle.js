@@ -1,7 +1,7 @@
 import { drawBoard } from "./board.js";
 import { find_all_words } from "./find_words.js";
 
-let game_id = 0;
+let game_id = undefined;
 let board_letters = "";
 let valid_words = [];
 let found_words = new Set();
@@ -13,6 +13,10 @@ const valid_word_length = 4;
 //     .replace(/[^a-z]+/g, "");
 // }
 // drawBoard(10, 10, board_letters);
+
+const params = new URLSearchParams(window.location.search);
+if (params.has("board")) game_id = params.get("board");
+// console.log(params, params.get("board"));
 
 function update_percentage() {
   document.getElementById("percentage").innerHTML =
@@ -114,6 +118,8 @@ const scrabble_letters =
 const boardSize = 10;
 const base = "";
 function newBoard() {
+  const newBoardRef = database.ref("boards").push();
+
   const m = boardSize;
   const n = boardSize;
   let board = "";
@@ -129,44 +135,72 @@ function newBoard() {
     words: words,
     m: m,
     n: n,
+    found_words: [],
+    creation_time: firebase.database.ServerValue.TIMESTAMP,
   };
+
+  newBoardRef.set(boardData);
+  console.log(newBoardRef.key);
+  const boardName = newBoardRef.key;
 
   // TODO sync new board with firebase
   processNewBoard(boardData);
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
+  // What is page : 1 ???? and title 1 ????
+  history.pushState({ page: 1 }, "title 1", `?board=${boardName}`);
 }
 
 document.getElementById("new-board").onclick = newBoard;
 
 function fetchBoard() {
-  // let xhttp = new XMLHttpRequest();
-  // xhttp.onload = function () {
-  //   console.log(this.response);
-  //   const boardData = JSON.parse(this.response);
-  //   processNewBoard(boardData);
-  // };
-  // xhttp.open("GET", base + "NewBoard.php", true);
-  // xhttp.send();
-  // document.getElementById("Spinner").style.display = "inline-block";
-  database
-    .ref("boards")
-    .once("value")
-    .then(function (snapshot) {
-      console.log(snapshot.toJSON());
-      let data = snapshot.toJSON()[game_id];
+  // database
+  //   .ref("boards")
+  //   .once("value")
+  //   .then((s) => {
+  //     console.log(s.toJSON());
+  //   });
+
+  if (game_id) {
+    const boardRef = database.ref("boards").child(game_id);
+    boardRef.once("value").then(function (snapshot) {
+      let data = snapshot.toJSON();
       data.words = Object.values(data.words);
       processNewBoard(data);
-      loadFoundWords(Object.values(data.found_words));
+      if (data.found_words) loadFoundWords(Object.values(data.found_words));
     });
-  database
-    .ref("boards")
-    .child(game_id)
-    .child("found_words")
-    .on("child_added", function (snapshot) {
+    boardRef.child("found_words").on("child_added", function (snapshot) {
       let word = snapshot.toJSON();
       if (!found_words.has(word)) {
         addToWordList(snapshot.toJSON(), "good");
       }
     });
+  } else {
+    const boardRef = database
+      .ref("boards")
+      .orderByChild("creation_time")
+      .limitToLast(1);
+
+    boardRef.once("value").then(function (snapshot) {
+      const snapJSON = snapshot.toJSON();
+      let boardName = Object.keys(snapJSON)[0];
+      console.log(boardName);
+      let data = Object.values(snapJSON)[0];
+      data.words = Object.values(data.words);
+      processNewBoard(data);
+      if (data.found_words) loadFoundWords(Object.values(data.found_words));
+
+      // https://developer.mozilla.org/en-US/docs/Web/API/History_API#Adding_and_modifying_history_entries
+      // What is page : 1 ???? and title 1 ????
+      history.pushState({ page: 1 }, "title 1", `?board=${boardName}`);
+    });
+    boardRef.ref.child("found_words").on("child_added", function (snapshot) {
+      let word = snapshot.toJSON();
+      if (!found_words.has(word)) {
+        addToWordList(snapshot.toJSON(), "good");
+      }
+    });
+  }
 }
 
 fetchBoard();
